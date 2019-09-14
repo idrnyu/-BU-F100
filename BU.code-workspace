@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"led.h": "c",
+			"stm32f10x.h": "c",
+			"core_cm3.h": "c",
+			"delay.h": "c",
+			"usart.h": "c",
+			"stm32f10x_usart.h": "c",
+			"string.h": "c"
+		},
+		"files.encoding": "gb2312",
+		"editor.tabSize": 2
+	}
+}
