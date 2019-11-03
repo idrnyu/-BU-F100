@@ -83,6 +83,8 @@ int main(void)
 			RX2_Flat = false;
 			memset(RX2_Buffer, 0, 1024); //清空数组
 		}
+		// my_printf(USART1, "我的电脑\r\n");
+		// my_printf(USART1, "%d", 12);
 		// USART_OUT(USART1, "我的电脑 \r\n");
 		// USART_OUT(USART1, "字符串是：%s","abcdefg \r\n");
 		// char arr[] = { 0xFF, 0xFB, 0xAA };

@@ -5,7 +5,8 @@
 #include "led.h"
 #include "dma.h"
 #include <string.h>
-#include <stdbool.h>
+#include <stdarg.h>
+//#include <stdbool.h>
 
 
 extern uint8_t RX1_Buffer[];  // Ω” ’ª∫≥Â«¯
@@ -25,6 +26,8 @@ void USART_Config(USART_TypeDef *USARTx, uint32_t BaudRate, bool isIRQ, bool isR
 void USART_OUT(USART_TypeDef *USARTx, uint8_t *Data, ...);
 
 void USART_OUT_Arr(USART_TypeDef* USARTx, uint8_t* Data);
+//int vsnprintf (char * s, size_t n, const char * format, va_list arg );
+void my_printf(USART_TypeDef* USARTx, const char *fmt, ...);
 
 #endif  /* __USART_H */
 

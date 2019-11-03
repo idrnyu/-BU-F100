@@ -1,7 +1,6 @@
 #include "usart.h"
 #include <stdarg.h>
 
-
 // 串口端口初始化
 void USART_GPIO_Config(GPIO_TypeDef *GPIOx, uint16_t TX_Pin_x, uint16_t RX_Pin_x)
 {
@@ -244,8 +243,9 @@ void USART_OUT_Arr(USART_TypeDef* USARTx, uint8_t* Data)
 }
 
 // 自定义printf到UART1输出
-// my_printf_UART1("%d\t", b[i]);
-void my_printf_UART1(const char *fmt, ...)
+// my_printf(USART2, "%d\t", b[i]);
+int vsnprintf (char * s, size_t n, const char * format, va_list arg );
+void my_printf(USART_TypeDef* USARTx, const char *fmt, ...)
 {  
   char buf[80], *p;
   va_list ap;  
@@ -253,8 +253,8 @@ void my_printf_UART1(const char *fmt, ...)
   vsnprintf(buf, sizeof(buf), fmt, ap);  
   for (p = buf; *p; ++p)
   {
-    USART_SendData(USART1, *p);
-    while(!USART_GetFlagStatus(USART1, USART_FLAG_TXE));
+    USART_SendData(USARTx, *p);
+    while(!USART_GetFlagStatus(USARTx, USART_FLAG_TXE));
   }
   va_end(ap);
 }
@@ -286,7 +286,8 @@ void USART2_IRQHandler(void) // 串口2中断
 		uint8_t USART_RX_Data = USART_ReceiveData(USART2);
     int Usart2_Rec_Cnt = buffSize - DMA_GetCurrDataCounter(DMA1_Channel6); // 算出接本帧数据长度
 		
-		USART_OUT(USART1, "%h", RX2_Buffer);  // 串口1回显串口2数据
+		// USART_OUT(USART1, "%h", RX2_Buffer);  // 串口1回显串口2数据
+		my_printf(USART1, (const char *)RX2_Buffer);
 
 		RX2_Flat = true;
 		DMA_Enable(DMA1_Channel6, buffSize);  //开始一次DMA传输！

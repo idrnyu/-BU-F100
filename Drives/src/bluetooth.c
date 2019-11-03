@@ -5,9 +5,9 @@
 // uint8_t expectFlat  期望返回值
 uint8_t AT_Bluetooth_config(uint8_t *AT_CMD, char *resolveTXT, uint8_t expectFlat)
 {
-  USART_OUT(USART2, AT_CMD); // 进入AT命令
+  my_printf(USART2, (const char *)AT_CMD); // 进入AT命令
   Delay_ms(1);   // 延时发送下面一个命令
-  USART_OUT(USART1, AT_CMD); // 进入AT命令回显
+  my_printf(USART1, (const char *)AT_CMD); // 进入AT命令回显
   while (!RX2_Flat);  // 收到串口空闲标志
 	Delay_ms(10);  // 延时后等待接收稳定
   // int ch = indexOf((char *)RX2_Buffer, resolveTXT);  // 判断接收的字符串是否包含某个字符串
