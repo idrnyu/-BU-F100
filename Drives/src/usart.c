@@ -243,6 +243,22 @@ void USART_OUT_Arr(USART_TypeDef* USARTx, uint8_t* Data)
   }
 }
 
+// 自定义printf到UART1输出
+// my_printf_UART1("%d\t", b[i]);
+void my_printf_UART1(const char *fmt, ...)
+{  
+  char buf[80], *p;
+  va_list ap;  
+  va_start(ap, fmt);  
+  vsnprintf(buf, sizeof(buf), fmt, ap);  
+  for (p = buf; *p; ++p)
+  {
+    USART_SendData(USART1, *p);
+    while(!USART_GetFlagStatus(USART1, USART_FLAG_TXE));
+  }
+  va_end(ap);
+}
+
 // 串口接收中断，每收到一个数据可以处理一次   空闲中断  等接收完成后中断
 void USART1_IRQHandler(void)      //串口1 中断服务程序
 {
