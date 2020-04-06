@@ -5,6 +5,12 @@
 #include "usart.h"
 #include "bluetooth.h"
 
+// P03 GND
+// P04 GND
+// P28 PA2
+// P27 PA3
+// P17 NC
+// RES 3V3
 
 uint8_t RX1_Buffer[1024];  // 接收缓冲区  橙色  绿色  蓝色  紫色
 uint8_t RX2_Buffer[1024];  // 接收缓冲区
