@@ -15,7 +15,7 @@ void USART_GPIO_Config(GPIO_TypeDef *GPIOx, uint16_t TX_Pin_x, uint16_t RX_Pin_x
   GPIO_Init(GPIOx, &GPIO_InitStructure);
 }
 
-// 串口初始化
+// 串口初始化  USARTx 串口号    BaudRate 波特率   isIRQ  是否中断    isRxDMA 是否DMA
 void USART_Config(USART_TypeDef *USARTx, uint32_t BaudRate, bool isIRQ, bool isRxDMA)
 {
   if (USARTx == USART1)
@@ -250,7 +250,7 @@ void my_printf(USART_TypeDef* USARTx, const char *fmt, ...)
   char buf[80], *p;
   va_list ap;  
   va_start(ap, fmt);  
-  vsnprintf(buf, sizeof(buf), fmt, ap);  
+  vsnprintf(buf, sizeof(buf), fmt, ap);
   for (p = buf; *p; ++p)
   {
     USART_SendData(USARTx, *p);
@@ -267,10 +267,23 @@ void USART1_IRQHandler(void)      //串口1 中断服务程序
   // {
   //   USART_ClearITPendingBit(USART1, USART_IT_IDLE); // 清除中断标志
   //   USART_ReceiveData(USART1);
-  //   GPIO_ResetBits(LED_GPIO_x, LED_Pin_x);
+	// 	GPIO_ResetBits(LED_GPIO_x, LED_Pin_x);
 
-  //   DMA_Enable(DMA1_Channel5, buffSize);  //开始一次DMA传输！
-  // }
+	// 	DMA_Enable(DMA1_Channel5, buffSize);  //开始一次DMA传输！
+	// }
+
+  int buffSize = 1024;
+  if(USART_GetITStatus(USART1, USART_IT_IDLE) != RESET)  // 接收完成  空闲中断 (接收到的数据必须是0x0d 0x0a结尾)
+  {
+		uint8_t USART_RX_Data = USART_ReceiveData(USART1);
+    int Usart1_Rec_Cnt = buffSize - DMA_GetCurrDataCounter(DMA1_Channel5); // 算出接本帧数据长度
+		
+		my_printf(USART2, (const char *)RX1_Buffer);  // 串口2回显串口1数据
+
+		RX1_Flat = true;
+		DMA_Enable(DMA1_Channel5, buffSize);  //开始一次DMA传输！
+		USART_ClearITPendingBit(USART1, USART_IT_IDLE); // 清除中断标志
+  }
 
 	if(USART_GetITStatus(USART1, USART_IT_TXE) == SET)//发送中断 
 	{ 
@@ -286,13 +299,11 @@ void USART2_IRQHandler(void) // 串口2中断
 		uint8_t USART_RX_Data = USART_ReceiveData(USART2);
     int Usart2_Rec_Cnt = buffSize - DMA_GetCurrDataCounter(DMA1_Channel6); // 算出接本帧数据长度
 		
-		// USART_OUT(USART1, "%h", RX2_Buffer);  // 串口1回显串口2数据
-		my_printf(USART1, (const char *)RX2_Buffer);
+		my_printf(USART1, (const char *)RX2_Buffer);  // 串口1回显串口2数据
 
 		RX2_Flat = true;
 		DMA_Enable(DMA1_Channel6, buffSize);  //开始一次DMA传输！
 		USART_ClearITPendingBit(USART2, USART_IT_IDLE); // 清除中断标志
-		
   }
 
   if(USART_GetITStatus(USART2, USART_IT_TXE) == SET)//发送中断 
@@ -312,7 +323,7 @@ void USART3_IRQHandler(void) // 串口2中断
   }
 
   if(USART_GetITStatus(USART3, USART_IT_TXE) == SET)//发送中断 
-	{ 
+	{
 		USART_ITConfig(USART3, USART_IT_TXE, DISABLE);//禁止发缓冲器空中断， 
 	}	
 }

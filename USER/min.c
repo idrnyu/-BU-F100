@@ -20,8 +20,11 @@ int main(void)
 {
 	Delay_Init();
 	Init_LED();
-	USART_Config(USART1, 115200, false, false);
+	USART_Config(USART1, 115200, true, true);
 	USART_Config(USART2, 115200, true, true);
+	
+	my_printf(USART1, "我的电脑\r\n");
+	my_printf(USART1, "%d", 12);
 	
 	for(u8 i=0; i<6; i++)
 	{
@@ -70,7 +73,11 @@ int main(void)
 			RX2_Flat = false;
 			memset(RX2_Buffer, 0, 1024); //清空数组
 		}
-		
+		if(RX1_Flat)
+		{
+			RX1_Flat = false;
+			memset(RX1_Buffer, 0, 1024); //清空数组
+		}
 		if(RX2_Flat)
 		{
 			// char ch4[] = { 0x01, 0x07, 0x16, 0x01, 0x01, 0x4E, 0x55, 0x4C, 0x4C };

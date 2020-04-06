@@ -13,7 +13,9 @@
 			"usart.h": "c",
 			"stm32f10x_usart.h": "c",
 			"string.h": "c",
-			"stdarg.h": "c"
+			"stdarg.h": "c",
+			"dma.h": "c",
+			"bluetooth.h": "c"
 		},
 		"files.encoding": "gb2312",
 		"editor.tabSize": 2
